@@ -2,7 +2,6 @@ import  requests
 from bs4 import BeautifulSoup
 import re
 
-
 class Tools:
     removeImg = re.compile('<img.*?>')
     removBr = re.compile('<br>')
@@ -10,7 +9,6 @@ class Tools:
     removeA = re.compile('</a>')
     removeClass = re.compile('<a class.*?>|<aclass.*?>')
     removeNull = re.compile(' ')
-
 
     def remove(self,te):
         te = re.sub(self.removeImg,'',te)
