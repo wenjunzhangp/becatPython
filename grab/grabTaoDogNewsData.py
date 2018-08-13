@@ -12,8 +12,7 @@ def get_html(url):
     user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4295.400'
     headers = {'User-Agent': user_agent}
     proxies = {
-        "http": "http://username:passwd@101.101.101.101:9000",
-        "http": "http://username:passwd@101.101.101.101:9000"
+        "http": "61.135.217.7:80"
     }
     response = requests.get(url, headers=headers,timeout=5, proxies=proxies)
     response.encoding = 'utf-8'
@@ -39,11 +38,11 @@ def grabData(page):
     time.sleep(random.random())
     url_joke = "http://www.yc.cn/news/news-"+str(page)+".html"
     html = get_html(url_joke)
-    print(html)
+    #print(html)
     news_title = get_news_title(html)
-    print(news_title)
+    #print(news_title)
     news_content = get_news_content(html)
-    print(news_content)
+    #print(news_content)
     print(str(page)+"页数据已经爬取完!!")
     curd.InsertDate(news_title,news_content)
 
@@ -60,9 +59,9 @@ class threadDownload(Thread):
 
 if __name__ == '__main__':
     my_queue = queue.Queue()
-    for i in range(2500,40925):
+    for i in range(39100,40000):
         my_queue.put_nowait(i)
-    for a in range(0, 1):
+    for a in range(0, 20):
         threadD = threadDownload(my_queue)
         threadD.start()
     while my_queue.empty():
