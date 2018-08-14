@@ -59,7 +59,7 @@ class threadDownload(Thread):
 
 if __name__ == '__main__':
     my_queue = queue.Queue()
-    for i in range(39100,40000):
+    for i in range(10000,40000):
         my_queue.put_nowait(i)
     for a in range(0, 20):
         threadD = threadDownload(my_queue)
