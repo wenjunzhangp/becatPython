@@ -55,9 +55,9 @@ class threadDownload(Thread):
                 break
 
 if __name__ == '__main__':
-    #grabData(200)
+
     my_queue = queue.Queue()
-    page = 200
+    page = 0
     for i in range(0,11):
         my_queue.put_nowait(page)
         page = page + 20
