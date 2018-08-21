@@ -1,79 +1,46 @@
-import requests
-from bs4 import BeautifulSoup
+import urllib.request
+from selenium import webdriver
+from PIL import Image
+import time
 from grab import grabDouBanCommentData
 
-def _get_captcha(content):
-    """
-    验证码获取函数，返回两个参数
-    :param content: 登录页面的html代码
-    :return: 验证码id, 验证码图片的url
-    """
-    soup = BeautifulSoup(content)
-    captcha_id_tag = soup.find('input', attrs={'type':'hidden', 'name': 'captcha-id'})
-    captcha_image_tag = soup.find('img', attrs={'id': 'captcha_image', 'alt': 'captcha', 'class': 'captcha_image'})
-    return captcha_id_tag['value'], captcha_image_tag['src']
+url = 'http://accounts.douban.com/login'
+# email = input('E-mail:')
+# password = input('Password:')
+email = 'zhangwenjunp@126.com'
+password = 'z971886506'
 
-class DoubanClient(object):
-    def __init__(self):
-        object.__init__(self)
-        headers = {
-            'user-agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36',
-            'origin': 'https://accounts.douban.com'
-        }
-        # create requests session
-        self.session = requests.Session()
-        self.session.headers.update(headers)
+browser = webdriver.PhantomJS(executable_path=r'D:\codetools\phantomjs-2.1.1-windows\bin\phantomjs.exe')
+browser.get(url)
 
-    def login(self, username, password,
-              source='index_nav',
-              redir='https://movie.douban.com',
-              remember='on',
-              login='登录'):
+#send account key
+print('writing username and password...')
+browser.find_element_by_name('form_email').send_keys(email)
+browser.find_element_by_name('form_password').send_keys(password)
 
-        """
-        :param username: 用户名
-        :param password: 密码
-        :param source: 以下参数都是定死的字符串，抓包的时候查看
-        :param redir:
-        :param remember:
-        :param login:
-        """
-        url = 'https://www.douban.com/accounts/login'
-        # 获取登录页面的内容，解析出验证码
-        r = requests.get(url)
-        (captcha_id, captha_url) = _get_captcha(r.content)
-        # 如果验证码解析正确，手动输入验证码
-        if captcha_id:
-            captcha_solution = input('please input the captcha for [%s]: ' % captha_url)
-        # 模拟data
-        data = {
-            'form_email': username,
-            'form_password': password,
-            'source': source,
-            'redir': redir,
-            'remember': remember,
-            'login': login
-        }
-        if captcha_id:
-            data['captcha-id'] = captcha_id
-            data['captcha-solution'] = captcha_solution
-        # 模拟headers
-        headers = {
-            'referer': 'https://accounts.douban.com/login?uid=&alias=&redir=https%3A%2F%2Fwww.douban.com%2F&source=index_nav&error=1001',
-            'host': 'accounts.douban.com'
-        }
-        proxies = {
-            "http": "60.2.148.253:80"
-        }
-        # 向豆瓣服务器post，模拟豆瓣登录
-        r = self.session.post(url, data=data, headers=headers, proxies=proxies)
-        print(r)
-        print(self.session.cookies.items())
+#get captcha link and save to local
+print('saving captcha image...')
+captcha_link = browser.find_element_by_id('captcha_image').get_attribute('src')
+urllib.request.urlretrieve(captcha_link,'captcha.jpg')
+Image.open('captcha.jpg').show()
+captcha_code = input('Pls input captcha code:')
+browser.find_element_by_id('captcha_field').send_keys(captcha_code)
 
-    def edit_signature(self, username, signature):
-        pass
+print('begin login...')
+browser.find_element_by_name('login').click()
+time.sleep(3)
 
-if __name__ == '__main__':
-    c = DoubanClient()
-    c.login('zhangwenjunp@126.com', 'z971886506')
-    grabDouBanCommentData.begin()
+if browser.current_url == 'https://www.douban.com/':
+    print('login success!')
+    cookies_list = browser.get_cookies()
+    key_dict = {i["name"]:i["value"] for i in cookies_list}
+    cookies_str = ''
+    for key in key_dict:
+        #print('key is %s,value is %s'%(key,key_dict[key]))
+        cookies_str += key +'='+ key_dict[key] + ";"
+    grabDouBanCommentData.begin(cookies_str)
+else:
+    print('login error!')
+    quit()
+
+browser.quit()
