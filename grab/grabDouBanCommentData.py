@@ -7,7 +7,7 @@ from threading import Thread
 
 # 获取html文档
 def get_html(url):
-    user_agent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.104 Safari/537.36 Core/1.53.4295.400'
+    user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36'
     headers = {'User-Agent': user_agent}
     proxies = {
         "http": "60.2.148.253:80"
@@ -43,6 +43,18 @@ def grabData(start):
     f.close()
     print("正在爬取【"+str(start)+"】数据!!")
 
+def begin():
+    my_queue = queue.Queue()
+    page = 0
+    for i in range(0,23):
+        my_queue.put_nowait(page)
+        page = page + 20
+    for a in range(0, 1):
+        threadD = threadDownload(my_queue)
+        threadD.start()
+    while my_queue.empty():
+        break
+
 class threadDownload(Thread):
     def __init__(self, que):
         Thread.__init__(self)
@@ -55,10 +67,9 @@ class threadDownload(Thread):
                 break
 
 if __name__ == '__main__':
-
     my_queue = queue.Queue()
     page = 0
-    for i in range(0,11):
+    for i in range(0,23):
         my_queue.put_nowait(page)
         page = page + 20
     for a in range(0, 1):
