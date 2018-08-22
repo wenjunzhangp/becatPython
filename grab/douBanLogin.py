@@ -5,10 +5,8 @@ import time
 from grab import grabDouBanCommentData
 
 url = 'http://accounts.douban.com/login'
-# email = input('E-mail:')
-# password = input('Password:')
-email = 'zhangwenjunp@126.com'
-password = 'z971886506'
+email = input('E-mail:')
+password = input('Password:')
 
 browser = webdriver.PhantomJS(executable_path=r'D:\codetools\phantomjs-2.1.1-windows\bin\phantomjs.exe')
 browser.get(url)
