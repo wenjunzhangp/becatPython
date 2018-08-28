@@ -22,7 +22,7 @@ def testconnect():
     db.close()
 
 #插入数据库
-def InsertDate(news_title,news_content):
+def InsertDate(goodsinfo):
     #打开数据库链接
     db = pymysql.connect(host,username,password,database,charset='utf8')
     #使用cursor() 方法创建一个游标对象 cursor
@@ -32,13 +32,12 @@ def InsertDate(news_title,news_content):
     start_time = time.strftime('%Y-%m-%d %H:%M:%S')
     end_time = time.strftime('%Y-%m-%d %H:%M:%S')
     #Sql 插入语句
-    sql = "INSERT INTO `test`.`industry_consultancy` ( `title`, `content`, `display`, `createTime`, `publicTime`, `lastModifyTime`, `status`, `major`, `remark`, `category`, `source`, `shareNumber`, `lookNumber`, `sourceImg`, `description`, `carouselPosition`, `hot`) " \
-          "VALUES ('%s', '%s', b'1', '%s', '%s', '%s', '1', '暂无', '', '23', '网络', '0', '0', 'muisc.png', NULL, NULL, b'1');" \
-          %(news_title,news_content,create_time,create_time,create_time)
+    sql = "INSERT INTO `test`.`taobao_coupon` (`goodsname`, `goodsremark`, `totalcount`, `buynum`, `onlineprice`, `couponprice`, `url`,`createtime`)" \
+          "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
+          %(goodsinfo.get('goodsname'),goodsinfo.get('goodsremark'),goodsinfo.get('totalcount'),goodsinfo.get('buynum'),goodsinfo.get('onlineprice'),goodsinfo.get('couponprice'),goodsinfo.get('url'),create_time)
     try:
         tt = cursor.execute(sql)
         db.commit()
-        #print("新增成功，事物已提交序号"+str(count))
     except UnicodeEncodeError as e :
         #发生错误时回滚
         print(e)
