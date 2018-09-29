@@ -22,7 +22,7 @@ def testconnect():
     db.close()
 
 #插入数据库
-def InsertDate(goodsinfo):
+def InsertDate(data):
     #打开数据库链接
     db = pymysql.connect(host,username,password,database,charset='utf8')
     #使用cursor() 方法创建一个游标对象 cursor
@@ -32,9 +32,9 @@ def InsertDate(goodsinfo):
     start_time = time.strftime('%Y-%m-%d %H:%M:%S')
     end_time = time.strftime('%Y-%m-%d %H:%M:%S')
     #Sql 插入语句
-    sql = "INSERT INTO `test`.`taobao_coupon` (`goodsname`, `goodsremark`, `totalcount`, `buynum`, `onlineprice`, `couponprice`, `url`,`createtime`)" \
-          "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
-          %(goodsinfo.get('goodsname'),goodsinfo.get('goodsremark'),goodsinfo.get('totalcount'),goodsinfo.get('buynum'),goodsinfo.get('onlineprice'),goodsinfo.get('couponprice'),goodsinfo.get('url'),create_time)
+    sql = "INSERT INTO `wechat_idiom` (`name`, `spell`, `content`, `derivation`, `samples`, `gameImg`, `answer`,`createtime`) VALUES" \
+          "( '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');" \
+          %(data.get('answer'),'',data.get('content'),'','',data.get('imageurl'),'',create_time)
     try:
         tt = cursor.execute(sql)
         db.commit()
