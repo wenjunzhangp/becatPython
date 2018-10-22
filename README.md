@@ -1,4 +1,4 @@
-# Python的一些小demo
+# Python队列+多线程爬虫（起点小说网、豆瓣、京东订单、百度贴吧、淘宝优惠券6W数据、糗事百科）
 官网地址：https://www.doudoucat.com<br>
 微信公众号：微信搜索“becatshop”或者“豆豆的蓝胖子”,点击关注即可
 <br><br>
